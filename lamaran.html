@@ -28,8 +28,8 @@ body{
  flex-direction:column;
  align-items:center;
  justify-content:flex-start;
- padding:20px;
- animation: bgMove 15s linear infinite;
+ padding:16px;
+ animation: bgMove 20s linear infinite;
 }
 
 @keyframes bgMove{
@@ -38,7 +38,7 @@ body{
  100%{background-position:0% 50%;}
 }
 
-h3{text-align:center;color:var(--secondary);margin-bottom:16px;}
+h3{text-align:center;color:var(--secondary);margin-bottom:16px;font-size:18px;}
 
 .container{
  max-width:520px;
@@ -47,7 +47,6 @@ h3{text-align:center;color:var(--secondary);margin-bottom:16px;}
  background:var(--card);
  backdrop-filter:blur(20px);
  border-radius:24px;
- display:block;
  box-shadow:0 10px 30px rgba(0,0,0,0.5);
  position:relative;
 }
@@ -120,7 +119,6 @@ textarea{resize:none;height:90px;}
 }
 
 #status{text-align:center;margin-top:14px;font-size:14px;}
-
 </style>
 </head>
 <body>
@@ -168,23 +166,21 @@ textarea{resize:none;height:90px;}
 </div>
 
 <script>
-let step=0
-const steps=document.querySelectorAll('.step')
-const progressBar=document.getElementById('progressBar')
-const WEBSITE_URL="https://stmcomp.netlify.app"
+let step=0;
+const steps=document.querySelectorAll('.step');
+const progressBar=document.getElementById('progressBar');
+const WEBSITE_URL="https://stmcomp.netlify.app";
 
 function updateProgress(){
- progressBar.style.width=((step+1)/3*100)+'%'
+ progressBar.style.width=((step+1)/3*100)+'%';
 }
 
 function nextStep(n){
- steps[step].classList.remove('active')
- step=n-1
- step=n-1
- steps[step].classList.add('active')
- document.getElementById('stepTitle').innerText=`Step ${n} / 3`
- step=n-1
- updateProgress()
+ steps[step].classList.remove('active');
+ step=n-1;
+ steps[step].classList.add('active');
+ document.getElementById('stepTitle').innerText=`Step ${n} / 3`;
+ updateProgress();
 }
 
 // Anti spam 1 menit
@@ -193,23 +189,36 @@ if(Date.now() - (localStorage.lastSubmit||0) < 60000){
   <h2 style="text-align:center;padding:40px">
    ⏳ Kamu sudah mengirim lamaran.<br>
    Tunggu <b>1 menit</b> sebelum mengirim lagi.
-  </h2>`
+  </h2>`;
 }
 
+// Fungsi kirim lamaran + simpan ke localStorage agar admin bisa baca
 async function kirim(){
  if(!nama.value||!discordId.value||!umur.value||!exp.value||!foto.files[0]){
-  alert("Lengkapi semua data")
-  return
+  alert("Lengkapi semua data");
+  return;
  }
 
- submitBtn.disabled=true
- status.innerText="⏳ Mengirim lamaran..."
+ submitBtn.disabled=true;
+ status.innerText="⏳ Mengirim lamaran...";
 
- const formData=new FormData()
- formData.append("file",foto.files[0],"foto.png")
+ const idDaftar=Date.now();
 
- const idDaftar=Date.now()
+ // Simpan ke localStorage agar admin bisa lihat
+ let lamaranSTM=JSON.parse(localStorage.getItem("lamaranSTM")||"[]");
+ lamaranSTM.push({
+  id:idDaftar,
+  nama:nama.value,
+  umur:umur.value,
+  discord:discordId.value,
+  pengalaman:exp.value,
+  status:"MENUNGGU"
+ });
+ localStorage.setItem("lamaranSTM",JSON.stringify(lamaranSTM));
 
+ // Kirim ke webhook Discord
+ const formData=new FormData();
+ formData.append("file",foto.files[0],"foto.png");
  formData.append("payload_json",JSON.stringify({
   content:`<@${discordId.value}>`,
   embeds:[{
@@ -228,15 +237,15 @@ async function kirim(){
    footer:{text:"STM Company Recruitment"},
    timestamp:new Date()
   }]
- }))
+ }));
 
  await fetch("https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m",{
   method:"POST",
   body:formData
- })
+ });
 
- localStorage.lastSubmit=Date.now()
- status.innerHTML=`📬 Lamaran terkirim Ditunggu yah<br>ID: <b>${idDaftar}</b>`
+ localStorage.lastSubmit=Date.now();
+ status.innerHTML=`📬 Lamaran terkirim!<br>ID: <b>${idDaftar}</b>`;
 }
 </script>
 
