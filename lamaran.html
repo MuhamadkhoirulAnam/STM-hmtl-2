@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Lamaran Mekanik - STM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --primary:#6366f1;
+ --secondary:#22d3ee;
+ --accent:#f97316;
+ --bg:#020617;
+ --card:rgba(2,6,23,.85);
+ --text:#e5e7eb;
+ --muted:#94a3b8;
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Poppins;
+ color:var(--text);
+ min-height:100vh;
+ background: linear-gradient(135deg,#020617,#0f172a);
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:flex-start;
+ padding:20px;
+ animation: bgMove 15s linear infinite;
+}
+
+@keyframes bgMove{
+ 0%{background-position:0% 50%;}
+ 50%{background-position:100% 50%;}
+ 100%{background-position:0% 50%;}
+}
+
+h3{text-align:center;color:var(--secondary);margin-bottom:16px;}
+
+.container{
+ max-width:520px;
+ width:100%;
+ padding:24px;
+ background:var(--card);
+ backdrop-filter:blur(20px);
+ border-radius:24px;
+ display:block;
+ box-shadow:0 10px 30px rgba(0,0,0,0.5);
+ position:relative;
+}
+
+.progress{
+ height:6px;
+ background:#1e293b;
+ border-radius:3px;
+ margin-bottom:20px;
+ overflow:hidden;
+}
+
+.progress-bar{
+ height:100%;
+ width:0%;
+ background: linear-gradient(90deg, var(--primary), var(--secondary));
+ transition: width 0.4s ease;
+}
+
+input,textarea{
+ width:100%;
+ padding:14px 40px 14px 14px;
+ border-radius:14px;
+ border:1px solid #1e293b;
+ background:var(--bg);
+ color:#fff;
+ margin:10px 0;
+ font-size:14px;
+ position:relative;
+}
+
+.input-icon{
+ position:absolute;
+ right:14px;
+ top:50%;
+ transform:translateY(-50%);
+ color:var(--muted);
+ font-size:18px;
+ pointer-events:none;
+}
+
+textarea{resize:none;height:90px;}
+
+.btn{
+ width:100%;
+ max-width:300px;
+ background:linear-gradient(90deg,var(--primary),var(--secondary));
+ border:none;
+ color:#fff;
+ padding:14px 0;
+ border-radius:16px;
+ font-size:16px;
+ margin:12px 0;
+ cursor:pointer;
+ transition:transform .2s, box-shadow .2s;
+}
+
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.5);}
+
+.backBtn{
+ background:#f97316;
+}
+
+.step{display:none;animation:fadeSlide .4s ease;}
+.step.active{display:block}
+
+@keyframes fadeSlide{
+ from{opacity:0; transform:translateY(20px);}
+ to{opacity:1; transform:translateY(0);}
+}
+
+#status{text-align:center;margin-top:14px;font-size:14px;}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+ <h3 id="stepTitle">Step 1 / 3</h3>
+ <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+ <!-- STEP 1 -->
+ <div class="step active">
+  <div style="position:relative">
+   <input id="nama" placeholder="Nama IC">
+   <span class="input-icon">👤</span>
+  </div>
+  <div style="position:relative">
+   <input id="discordId" placeholder="Discord User ID (WAJIB)">
+   <span class="input-icon">💬</span>
+  </div>
+  <button class="btn" onclick="nextStep(2)">Lanjut</button>
+  <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ </div>
+
+ <!-- STEP 2 -->
+ <div class="step">
+  <div style="position:relative">
+   <input id="umur" type="number" placeholder="Umur">
+   <span class="input-icon">🎂</span>
+  </div>
+  <div style="position:relative">
+   <textarea id="exp" placeholder="Pengalaman"></textarea>
+   <span class="input-icon">🛠</span>
+  </div>
+  <button class="btn" onclick="nextStep(3)">Lanjut</button>
+  <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ </div>
+
+ <!-- STEP 3 -->
+ <div class="step">
+  <input type="file" id="foto" accept="image/*">
+  <button class="btn" id="submitBtn" onclick="kirim()">Kirim Lamaran</button>
+  <p id="status"></p>
+  <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ </div>
+
+</div>
+
+<script>
+let step=0
+const steps=document.querySelectorAll('.step')
+const progressBar=document.getElementById('progressBar')
+const WEBSITE_URL="https://stmcomp.netlify.app"
+
+function updateProgress(){
+ progressBar.style.width=((step+1)/3*100)+'%'
+}
+
+function nextStep(n){
+ steps[step].classList.remove('active')
+ step=n-1
+ step=n-1
+ steps[step].classList.add('active')
+ document.getElementById('stepTitle').innerText=`Step ${n} / 3`
+ step=n-1
+ updateProgress()
+}
+
+// Anti spam 1 menit
+if(Date.now() - (localStorage.lastSubmit||0) < 60000){
+ document.body.innerHTML=`
+  <h2 style="text-align:center;padding:40px">
+   ⏳ Kamu sudah mengirim lamaran.<br>
+   Tunggu <b>1 menit</b> sebelum mengirim lagi.
+  </h2>`
+}
+
+async function kirim(){
+ if(!nama.value||!discordId.value||!umur.value||!exp.value||!foto.files[0]){
+  alert("Lengkapi semua data")
+  return
+ }
+
+ submitBtn.disabled=true
+ status.innerText="⏳ Mengirim lamaran..."
+
+ const formData=new FormData()
+ formData.append("file",foto.files[0],"foto.png")
+
+ const idDaftar=Date.now()
+
+ formData.append("payload_json",JSON.stringify({
+  content:`<@${discordId.value}>`,
+  embeds:[{
+   title:"📩 LAMARAN MEKANIK BARU",
+   color:5793266,
+   fields:[
+    {name:"ID Pendaftaran",value:String(idDaftar)},
+    {name:"Nama IC",value:nama.value,inline:true},
+    {name:"Umur",value:umur.value,inline:true},
+    {name:"Discord ID",value:discordId.value},
+    {name:"Pengalaman",value:exp.value},
+    {name:"Website",value:`[Buka Website](${WEBSITE_URL})`},
+    {name:"Status",value:"MENUNGGU"}
+   ],
+   image:{url:"attachment://foto.png"},
+   footer:{text:"STM Company Recruitment"},
+   timestamp:new Date()
+  }]
+ }))
+
+ await fetch("https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m",{
+  method:"POST",
+  body:formData
+ })
+
+ localStorage.lastSubmit=Date.now()
+ status.innerHTML=`📬 Lamaran terkirim Ditunggu yah<br>ID: <b>${idDaftar}</b>`
+}
+</script>
+
+</body>
+</html>
