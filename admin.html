@@ -2,60 +2,58 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel - STM Recruitment</title>
+<title>STM Recruitment - Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
- --primary:#6366f1; --secondary:#22d3ee; --accent:#f97316; --bg:#020617;
- --card:rgba(2,6,23,.85); --text:#e5e7eb; --muted:#94a3b8;
+ --primary:#6366f1; --secondary:#22d3ee; --accent:#f97316;
+ --bg:#020617; --card:rgba(2,6,23,.85);
+ --text:#e5e7eb; --muted:#94a3b8;
  --success:#22c55e; --danger:#ef4444;
 }
 *{box-sizing:border-box;}
 body{
- margin:0; font-family:Poppins; background:linear-gradient(135deg,#020617,#0f172a);
- color:var(--text); min-height:100vh; display:flex; flex-direction:column;
- align-items:center; padding:16px;
+ margin:0; font-family:Poppins;
+ background:linear-gradient(135deg,#020617,#0f172a);
+ color:var(--text);
+ min-height:100vh;
+ display:flex; flex-direction:column; align-items:center; padding:16px;
 }
 h2,h3{text-align:center;color:var(--secondary);margin-bottom:12px;}
 .container{
- max-width:100%; width:100%; padding:20px; background:var(--card);
- backdrop-filter:blur(20px); border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.5);
+ max-width:100%; width:100%; padding:20px;
+ background:var(--card); backdrop-filter:blur(20px);
+ border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.5);
  margin-bottom:20px; display:none;
 }
 input,textarea{
- width:100%; padding:12px; border-radius:12px; border:1px solid #1e293b;
- background:var(--bg); color:#fff; margin:8px 0; font-size:14px;
+ width:100%; padding:12px; border-radius:12px;
+ border:1px solid #1e293b; background:var(--bg);
+ color:#fff; margin:8px 0; font-size:14px;
 }
 textarea{resize:none;height:70px;}
 .btn{
- width:100%; max-width:220px; background:linear-gradient(90deg,var(--primary),var(--secondary));
- border:none; color:#fff; padding:12px 0; border-radius:14px; font-size:16px;
- margin:8px 0; cursor:pointer; transition:all .2s;
+ width:100%; max-width:220px;
+ background:linear-gradient(90deg,var(--primary),var(--secondary));
+ border:none; color:#fff; padding:12px 0;
+ border-radius:14px; font-size:16px; margin:8px 0; cursor:pointer;
+ transition:all .2s;
 }
-.btn:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.4);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
 .backBtn{background:var(--accent);}
-.table-wrapper{width:100%; overflow-x:auto; margin-top:12px;}
-table{width:100%; border-collapse:collapse; min-width:600px;}
-th,td{border:1px solid #1e293b; padding:8px; text-align:center; font-size:13px;}
+.table-wrapper{width:100%;overflow-x:auto;margin-top:12px;}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th,td{border:1px solid #1e293b;padding:8px;text-align:center;font-size:13px;}
 th{background:rgba(99,102,241,.3);}
 tr:nth-child(even){background:rgba(34,211,238,.1);}
-.actionBtn{padding:6px 10px; border:none; border-radius:8px; cursor:pointer; color:#fff; margin:2px; font-size:13px;}
+.actionBtn{padding:6px 10px;border:none;border-radius:8px;cursor:pointer;color:#fff;margin:2px;font-size:13px;}
 .approve{background:var(--success);}
 .reject{background:var(--danger);}
-.modal{
- position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6);
- display:none; justify-content:center; align-items:center; z-index:10; padding:10px;
-}
-.modal-content{
- background:var(--card); padding:20px; border-radius:16px; max-width:360px; width:100%; text-align:center;
-}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:10;padding:10px;}
+.modal-content{background:var(--card);padding:20px;border-radius:16px;max-width:360px;width:100%;text-align:center;}
 .modal input{margin-top:10px;}
 .modal .btn{margin-top:12px;}
-@media(max-width:480px){
- th,td{font-size:12px; padding:6px;}
- .btn{font-size:14px; padding:10px 0;}
-}
 </style>
 </head>
 <body>
@@ -65,7 +63,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
  <h2>Admin Panel Login</h2>
  <input type="password" id="pin" placeholder="Masukkan PIN Admin">
  <button class="btn" onclick="login()">Login</button>
- <button class="btn backBtn" onclick="location.href='menu.html'">⬅ Kembali ke Menu Utama</button>
+ <button class="btn backBtn" onclick="location.href='index.html'">⬅ Kembali ke Menu Utama</button>
  <p id="loginStatus"></p>
 </div>
 
@@ -93,7 +91,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
   <tbody id="lamaranList"></tbody>
  </table>
  </div>
- <button class="btn backBtn" onclick="location.href='https://stmcomp.netlify.app/'">⬅ Kembali ke Menu Utama</button>
+ <button class="btn backBtn" onclick="location.href='index.html'">⬅ Kembali ke Menu Utama</button>
 </div>
 
 <!-- Modal Alasan -->
@@ -120,8 +118,8 @@ function login(){
   document.getElementById("loginContainer").style.display="none";
   document.getElementById("dashboard").style.display="block";
   loadLamaran();
-  setInterval(loadLamaran,2000); // update real-time setiap 2 detik
- }else{
+  setInterval(loadLamaran,2000); // update otomatis setiap 2 detik
+ } else {
   loginStatus.innerText="❌ PIN salah";
   loginStatus.style.color="#ef4444";
  }
@@ -131,9 +129,9 @@ function loadLamaran(){
  lamaranData=JSON.parse(localStorage.getItem("lamaranSTM")||"[]");
  let pending=0,approved=0,rejected=0;
  lamaranData.forEach(l=>{
-  if(l.status.includes("MENUNGGU")) pending++;
-  else if(l.status.includes("DISETUJUI")) approved++;
-  else if(l.status.includes("DITOLAK")) rejected++;
+   if(l.status.includes("MENUNGGU")) pending++;
+   else if(l.status.includes("DISETUJUI")) approved++;
+   else if(l.status.includes("DITOLAK")) rejected++;
  });
  statusCounts={pending,approved,rejected};
  updateStats();
@@ -172,12 +170,13 @@ function openModal(idx,action){
  document.getElementById("modalTitle").innerText=action==="approve"?"Setujui Lamaran":"Tolak Lamaran";
  document.getElementById("modalAlasan").style.display="flex";
 }
+
 function closeModal(){document.getElementById("modalAlasan").style.display="none";}
 
 function submitAlasan(){
  const alasan=document.getElementById("alasanInput").value.trim();
  const lam=lamaranData[currentIdx];
- if(currentAction==="reject"&&!alasan){alert("Alasan wajib diisi"); return;}
+ if(currentAction==="reject"&&!alasan){alert("Alasan wajib diisi");return;}
  lam.status=currentAction==="approve"?"DISETUJUI"+(alasan?` (${alasan})`:""):"DITOLAK ("+alasan+")";
  localStorage.setItem("lamaranSTM",JSON.stringify(lamaranData));
  closeModal();
@@ -196,8 +195,11 @@ function submitAlasan(){
    timestamp:new Date()
   }]
  };
- fetch(ADMIN_WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
- .then(()=>console.log("Webhook terkirim")).catch(err=>console.error(err));
+ fetch(ADMIN_WEBHOOK_URL,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify(payload)
+ }).then(()=>console.log("Webhook terkirim")).catch(err=>console.error(err));
 }
 </script>
 
