@@ -1,3 +1,4 @@
+<!-- Admin Panel HTML -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -137,7 +138,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
  <h2>Admin Panel Login</h2>
  <input type="password" id="pin" placeholder="Masukkan PIN Admin">
  <button class="btn" onclick="login()">Login</button>
- <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ <a href="index.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
  <p id="loginStatus"></p>
 </div>
 
@@ -162,9 +163,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
     <th>Aksi</th>
    </tr>
   </thead>
-  <tbody id="lamaranList">
-   <!-- Data muncul di sini -->
-  </tbody>
+  <tbody id="lamaranList"></tbody>
  </table>
  </div>
  <a href="index.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
@@ -182,40 +181,40 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
 
 <script>
 const adminPins = ["1234","4321","9999"]; 
-const lamaranData=[];
+let lamaranData = []; // Data lamaran dikirim user
 let statusCounts={pending:0,approved:0,rejected:0};
 let currentIdx=0;
 let currentAction="";
 const ADMIN_WEBHOOK_URL="https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m";
 
+// Simulasi ambil data lamaran dari localStorage (dikirim user)
+function loadFromLocal(){
+ const stored = localStorage.getItem("lamaranSTM");
+ if(stored){
+  lamaranData = JSON.parse(stored);
+  statusCounts={pending:0,approved:0,rejected:0};
+  lamaranData.forEach(lam=>{
+   if(lam.status==="MENUNGGU") statusCounts.pending++;
+   else if(lam.status.startsWith("DISETUJUI")) statusCounts.approved++;
+   else if(lam.status.startsWith("DITOLAK")) statusCounts.rejected++;
+  });
+ }
+}
+
+// Login admin
 function login(){
  const input=document.getElementById("pin").value;
  const loginStatus=document.getElementById("loginStatus");
  if(adminPins.includes(input)){
   document.getElementById("loginContainer").style.display="none";
   document.getElementById("dashboard").style.display="block";
-  loadLamaran();
+  loadFromLocal();
+  renderTable();
+  updateStats();
  }else{
   loginStatus.innerText="❌ PIN salah";
   loginStatus.style.color="var(--danger)";
  }
-}
-
-function loadLamaran(){
- if(lamaranData.length===0){
-  for(let i=1;i<=5;i++){
-   lamaranData.push({
-    id:Date.now()+i,
-    nama:"Mekanik "+i,
-    umur:20+i,
-    discord:"User#"+i,
-    status:"MENUNGGU"
-   });
-   statusCounts.pending++;
-  }
- }
- updateStats();
- renderTable();
 }
 
 function updateStats(){
@@ -244,6 +243,7 @@ function renderTable(){
  });
 }
 
+// Modal Alasan
 function openModal(idx,action){
  currentIdx=idx;
  currentAction=action;
@@ -251,9 +251,7 @@ function openModal(idx,action){
  document.getElementById("modalTitle").innerText=action==="approve"?"Setujui Lamaran":"Tolak Lamaran";
  document.getElementById("modalAlasan").style.display="flex";
 }
-function closeModal(){
- document.getElementById("modalAlasan").style.display="none";
-}
+function closeModal(){ document.getElementById("modalAlasan").style.display="none"; }
 
 function submitAlasan(){
  const alasan=document.getElementById("alasanInput").value.trim();
@@ -270,6 +268,10 @@ function submitAlasan(){
  renderTable();
  closeModal();
 
+ // Update localStorage agar sinkron dengan user
+ localStorage.setItem("lamaranSTM", JSON.stringify(lamaranData));
+
+ // Kirim ke webhook admin
  const payload={
   content:`Update Lamaran: ${lam.nama}`,
   embeds:[{
