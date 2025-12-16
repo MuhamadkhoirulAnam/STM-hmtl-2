@@ -1,4 +1,3 @@
-<!-- Admin Panel HTML -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,125 +7,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
- --primary:#6366f1;
- --secondary:#22d3ee;
- --accent:#f97316;
- --bg:#020617;
- --card:rgba(2,6,23,.85);
- --text:#e5e7eb;
- --muted:#94a3b8;
- --success:#22c55e;
- --danger:#ef4444;
+ --primary:#6366f1; --secondary:#22d3ee; --accent:#f97316; --bg:#020617;
+ --card:rgba(2,6,23,.85); --text:#e5e7eb; --muted:#94a3b8;
+ --success:#22c55e; --danger:#ef4444;
 }
-
 *{box-sizing:border-box;}
-body{
- margin:0;
- font-family:Poppins;
- background:linear-gradient(135deg,#020617,#0f172a);
- color:var(--text);
- min-height:100vh;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:flex-start;
- padding:16px;
-}
-
+body{margin:0;font-family:Poppins;background:linear-gradient(135deg,#020617,#0f172a);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px;}
 h2,h3{text-align:center;color:var(--secondary);margin-bottom:12px;}
-
-.container{
- max-width:100%;
- width:100%;
- padding:20px;
- background:var(--card);
- backdrop-filter:blur(20px);
- border-radius:20px;
- box-shadow:0 8px 25px rgba(0,0,0,0.5);
- margin-bottom:20px;
- display:none;
-}
-
-input,textarea{
- width:100%;
- padding:12px;
- border-radius:12px;
- border:1px solid #1e293b;
- background:var(--bg);
- color:#fff;
- margin:8px 0;
- font-size:14px;
-}
-
+.container{max-width:100%;width:100%;padding:20px;background:var(--card);backdrop-filter:blur(20px);border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,0.5);margin-bottom:20px;display:none;}
+input,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #1e293b;background:var(--bg);color:#fff;margin:8px 0;font-size:14px;}
 textarea{resize:none;height:70px;}
-
-.btn{
- width:100%;
- max-width:220px;
- background:linear-gradient(90deg,var(--primary),var(--secondary));
- border:none;
- color:#fff;
- padding:12px 0;
- border-radius:14px;
- font-size:16px;
- margin:8px 0;
- cursor:pointer;
- transition:all .2s;
-}
-
+.btn{width:100%;max-width:220px;background:linear-gradient(90deg,var(--primary),var(--secondary));border:none;color:#fff;padding:12px 0;border-radius:14px;font-size:16px;margin:8px 0;cursor:pointer;transition:all .2s;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
 .backBtn{background:var(--accent);}
-
-.table-wrapper{
- width:100%;
- overflow-x:auto;
- margin-top:12px;
-}
-
-table{
- width:100%;
- border-collapse:collapse;
- min-width:600px;
-}
-th,td{
- border:1px solid #1e293b;
- padding:8px;
- text-align:center;
- font-size:13px;
-}
+.table-wrapper{width:100%;overflow-x:auto;margin-top:12px;}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th,td{border:1px solid #1e293b;padding:8px;text-align:center;font-size:13px;}
 th{background:rgba(99,102,241,.3);}
 tr:nth-child(even){background:rgba(34,211,238,.1);}
-.actionBtn{
- padding:6px 10px;
- border:none;
- border-radius:8px;
- cursor:pointer;
- color:#fff;
- margin:2px;
- font-size:13px;
-}
+.actionBtn{padding:6px 10px;border:none;border-radius:8px;cursor:pointer;color:#fff;margin:2px;font-size:13px;}
 .approve{background:var(--success);}
 .reject{background:var(--danger);}
-
-/* Modal */
-.modal{
- position:fixed;
- top:0; left:0; right:0; bottom:0;
- background:rgba(0,0,0,0.6);
- display:none;
- justify-content:center;
- align-items:center;
- z-index:10;
- padding:10px;
-}
-.modal-content{
- background:var(--card);
- padding:20px;
- border-radius:16px;
- max-width:360px;
- width:100%;
- text-align:center;
-}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:10;padding:10px;}
+.modal-content{background:var(--card);padding:20px;border-radius:16px;max-width:360px;width:100%;text-align:center;}
 .modal input{margin-top:10px;}
 .modal .btn{margin-top:12px;}
 </style>
@@ -138,7 +41,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
  <h2>Admin Panel Login</h2>
  <input type="password" id="pin" placeholder="Masukkan PIN Admin">
  <button class="btn" onclick="login()">Login</button>
- <a href="index.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
  <p id="loginStatus"></p>
 </div>
 
@@ -166,7 +69,7 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
   <tbody id="lamaranList"></tbody>
  </table>
  </div>
- <a href="index.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
+ <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
 </div>
 
 <!-- Modal Alasan -->
@@ -180,41 +83,35 @@ tr:nth-child(even){background:rgba(34,211,238,.1);}
 </div>
 
 <script>
-const adminPins = ["1234","4321","9999"]; 
-let lamaranData = []; // Data lamaran dikirim user
+const adminPins=["1234","4321","9999"];
+let lamaranData=[];
 let statusCounts={pending:0,approved:0,rejected:0};
-let currentIdx=0;
-let currentAction="";
+let currentIdx=0,currentAction="";
 const ADMIN_WEBHOOK_URL="https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m";
 
-// Simulasi ambil data lamaran dari localStorage (dikirim user)
-function loadFromLocal(){
- const stored = localStorage.getItem("lamaranSTM");
- if(stored){
-  lamaranData = JSON.parse(stored);
-  statusCounts={pending:0,approved:0,rejected:0};
-  lamaranData.forEach(lam=>{
-   if(lam.status==="MENUNGGU") statusCounts.pending++;
-   else if(lam.status.startsWith("DISETUJUI")) statusCounts.approved++;
-   else if(lam.status.startsWith("DITOLAK")) statusCounts.rejected++;
-  });
- }
-}
-
-// Login admin
 function login(){
  const input=document.getElementById("pin").value;
  const loginStatus=document.getElementById("loginStatus");
  if(adminPins.includes(input)){
   document.getElementById("loginContainer").style.display="none";
   document.getElementById("dashboard").style.display="block";
-  loadFromLocal();
-  renderTable();
-  updateStats();
+  loadLamaran();
+  // Real-time update setiap 2 detik
+  setInterval(loadLamaran,2000);
  }else{
   loginStatus.innerText="❌ PIN salah";
-  loginStatus.style.color="var(--danger)";
+  loginStatus.style.color="#ef4444";
  }
+}
+
+function loadLamaran(){
+ lamaranData=JSON.parse(localStorage.getItem("lamaranSTM")||"[]");
+ // Hitung status
+ let pending=0,approved=0,rejected=0;
+ lamaranData.forEach(l=>{if(l.status.includes("MENUNGGU")) pending++; else if(l.status.includes("DISETUJUI")) approved++; else if(l.status.includes("DITOLAK")) rejected++;});
+ statusCounts={pending,approved,rejected};
+ updateStats();
+ renderTable();
 }
 
 function updateStats(){
@@ -243,45 +140,34 @@ function renderTable(){
  });
 }
 
-// Modal Alasan
 function openModal(idx,action){
- currentIdx=idx;
- currentAction=action;
+ currentIdx=idx; currentAction=action;
  document.getElementById("alasanInput").value="";
  document.getElementById("modalTitle").innerText=action==="approve"?"Setujui Lamaran":"Tolak Lamaran";
  document.getElementById("modalAlasan").style.display="flex";
 }
-function closeModal(){ document.getElementById("modalAlasan").style.display="none"; }
+function closeModal(){document.getElementById("modalAlasan").style.display="none";}
 
 function submitAlasan(){
  const alasan=document.getElementById("alasanInput").value.trim();
- const lam = lamaranData[currentIdx];
- if(currentAction==="reject" && !alasan){alert("Alasan wajib diisi"); return;}
- if(currentAction==="approve"){
-  lam.status="DISETUJUI"+(alasan?` (${alasan})`:"");
-  statusCounts.approved++; statusCounts.pending--;
- } else {
-  lam.status="DITOLAK ("+alasan+")";
-  statusCounts.rejected++; statusCounts.pending--;
- }
- updateStats();
- renderTable();
+ const lam=lamaranData[currentIdx];
+ if(currentAction==="reject"&&!alasan){alert("Alasan wajib diisi");return;}
+ lam.status=currentAction==="approve"?"DISETUJUI"+(alasan?` (${alasan})`:""):"DITOLAK ("+alasan+")";
+ // Simpan kembali ke localStorage agar real-time update
+ localStorage.setItem("lamaranSTM",JSON.stringify(lamaranData));
  closeModal();
-
- // Update localStorage agar sinkron dengan user
- localStorage.setItem("lamaranSTM", JSON.stringify(lamaranData));
 
  // Kirim ke webhook admin
  const payload={
   content:`Update Lamaran: ${lam.nama}`,
   embeds:[{
    title:"📝 Status Lamaran Diperbarui",
-   color: currentAction==="approve"?5793266:15158332,
+   color:currentAction==="approve"?5793266:15158332,
    fields:[
-    {name:"ID Pendaftaran", value:String(lam.id)},
-    {name:"Nama", value:lam.nama},
-    {name:"Discord ID", value:lam.discord},
-    {name:"Status", value:lam.status}
+    {name:"ID Pendaftaran",value:String(lam.id)},
+    {name:"Nama",value:lam.nama},
+    {name:"Discord ID",value:lam.discord},
+    {name:"Status",value:lam.status}
    ],
    timestamp:new Date()
   }]
