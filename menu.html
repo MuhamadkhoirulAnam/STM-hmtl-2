@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>STM Menu Utama</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+ --primary:#6366f1;
+ --secondary:#22d3ee;
+ --accent:#f97316;
+ --bg:#0f172a;
+ --card:rgba(2,6,23,.85);
+ --text:#e5e7eb;
+ --muted:#94a3b8;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+ font-family:Poppins, sans-serif;
+ background:#0f172a;
+ color:var(--text);
+ overflow-x:hidden;
+}
+
+/* Background animasi grid bintang */
+body::before{
+ content:'';
+ position:fixed;
+ top:0; left:0;
+ width:100%; height:100%;
+ background:radial-gradient(circle,#6366f1 1px,transparent 1px) 0 0,
+           radial-gradient(circle,#22d3ee 1px,transparent 1px) 50px 50px;
+ background-size:100px 100px;
+ animation:moveBg 20s linear infinite;
+ z-index:-1;
+}
+@keyframes moveBg{
+ 0%{background-position:0 0,50px 50px;}
+ 50%{background-position:50px 50px,0 0;}
+ 100%{background-position:0 0,50px 50px;}
+}
+
+/* Hero section */
+.hero{
+ min-height:100vh;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ padding:24px;
+}
+.hero h1{
+ font-size:clamp(28px,6vw,48px);
+ margin-bottom:8px;
+ animation:fadeInTop 1s ease forwards;
+ opacity:0;
+}
+.hero p{
+ color:var(--muted);
+ font-size:16px;
+ max-width:500px;
+ margin-bottom:24px;
+ animation:fadeInTop 1.2s ease forwards;
+ opacity:0;
+}
+
+/* Rules box */
+.rules{
+ background:var(--card);
+ padding:18px 24px;
+ border-radius:20px;
+ margin-bottom:24px;
+ box-shadow:0 8px 25px rgba(0,0,0,0.4);
+ max-width:480px;
+ text-align:left;
+ font-size:14px;
+ color:var(--muted);
+ animation:fadeIn 1.5s ease forwards;
+ opacity:0;
+}
+.rules h3{color:var(--secondary);margin-bottom:12px;font-size:16px;}
+.rules li{margin-bottom:8px;}
+
+/* Tombol menu */
+.btn{
+ display:inline-block;
+ width:220px;
+ max-width:90%;
+ margin:12px;
+ padding:16px 0;
+ font-size:16px;
+ font-weight:600;
+ color:#fff;
+ border:none;
+ border-radius:16px;
+ cursor:pointer;
+ background:linear-gradient(90deg,#6366f1,#22d3ee,#f97316,#6366f1);
+ background-size:300% 100%;
+ transition:0.5s;
+ box-shadow:0 8px 30px rgba(0,0,0,0.6);
+}
+.btn:hover{
+ background-position:100% 0;
+ transform:translateY(-4px);
+ box-shadow:0 12px 40px rgba(0,0,0,0.7);
+}
+
+/* Animasi */
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInTop{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+ <h1>STM Company Menu</h1>
+ <p>Pilih salah satu menu di bawah untuk melanjutkan:</p>
+
+ <!-- Rules / Info singkat -->
+ <div class="rules">
+  <h3>📜 Peraturan:</h3>
+  <ul>
+   <li>Pastikan data yang dikirim valid.</li>
+   <li>Lamaran hanya bisa dikirim 1 menit sekali.</li>
+   <li>Admin Panel hanya untuk staff berizin.</li>
+   <li>Gabung Discord STM untuk info terbaru.</li>
+  </ul>
+ </div>
+
+ <!-- Tombol menu -->
+ <button class="btn" onclick="location.href='lamaran.html'">🛠 Lamaran Mekanik</button>
+ <button class="btn" onclick="location.href='admin.html'">⚡ Petinggi Workshop</button>
+ <button class="btn" onclick="window.open('https://discord.gg/vYuna6hgj7')">💬 Discord STM</button>
+</section>
+
+</body>
+</html>
