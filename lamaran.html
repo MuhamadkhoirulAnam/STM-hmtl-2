@@ -102,6 +102,8 @@ textarea{resize:none;height:90px;}
  margin:12px 0;
  cursor:pointer;
  transition:transform .2s, box-shadow .2s;
+ position:relative;
+ overflow:hidden;
 }
 
 .btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.5);}
@@ -119,6 +121,18 @@ textarea{resize:none;height:90px;}
 }
 
 #status{text-align:center;margin-top:14px;font-size:14px;}
+
+.tooltip{
+ position:absolute;
+ background:var(--bg);
+ padding:6px 10px;
+ border-radius:8px;
+ font-size:12px;
+ color:var(--secondary);
+ border:1px solid var(--secondary);
+ display:none;
+ z-index:10;
+}
 </style>
 </head>
 <body>
@@ -132,10 +146,12 @@ textarea{resize:none;height:90px;}
   <div style="position:relative">
    <input id="nama" placeholder="Nama IC">
    <span class="input-icon">👤</span>
+   <div class="tooltip" id="tipNama">Masukkan nama IC kamu</div>
   </div>
   <div style="position:relative">
    <input id="discordId" placeholder="Discord User ID (WAJIB)">
    <span class="input-icon">💬</span>
+   <div class="tooltip" id="tipDiscord">Contoh: User#1234</div>
   </div>
   <button class="btn" onclick="nextStep(2)">Lanjut</button>
   <a href="index.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
@@ -146,10 +162,12 @@ textarea{resize:none;height:90px;}
   <div style="position:relative">
    <input id="umur" type="number" placeholder="Umur">
    <span class="input-icon">🎂</span>
+   <div class="tooltip" id="tipUmur">Umur harus diisi</div>
   </div>
   <div style="position:relative">
    <textarea id="exp" placeholder="Pengalaman"></textarea>
    <span class="input-icon">🛠</span>
+   <div class="tooltip" id="tipExp">Tulis pengalaman singkat</div>
   </div>
   <button class="btn" onclick="nextStep(3)">Lanjut</button>
   <a href="menu.html"><button class="btn backBtn">⬅ Kembali ke Menu Utama</button></a>
@@ -169,7 +187,16 @@ textarea{resize:none;height:90px;}
 let step=0;
 const steps=document.querySelectorAll('.step');
 const progressBar=document.getElementById('progressBar');
+const submitBtn=document.getElementById('submitBtn');
+const status=document.getElementById('status');
 const WEBSITE_URL="https://stmcomp.netlify.app";
+const form=document.querySelector('.container');
+
+const nama=document.getElementById('nama');
+const discordId=document.getElementById('discordId');
+const umur=document.getElementById('umur');
+const exp=document.getElementById('exp');
+const foto=document.getElementById('foto');
 
 function updateProgress(){
  progressBar.style.width=((step+1)/3*100)+'%';
@@ -183,6 +210,20 @@ function nextStep(n){
  updateProgress();
 }
 
+// Tooltip hover
+document.querySelectorAll('.input-icon').forEach(icon=>{
+ icon.addEventListener('mouseenter',e=>{
+   const tip=icon.nextElementSibling;
+   tip.style.display='block';
+   tip.style.top=(icon.offsetTop - 30)+'px';
+   tip.style.left=(icon.offsetLeft)+'px';
+ });
+ icon.addEventListener('mouseleave',e=>{
+   const tip=icon.nextElementSibling;
+   tip.style.display='none';
+ });
+});
+
 // Anti spam 1 menit
 if(Date.now() - (localStorage.lastSubmit||0) < 60000){
  document.body.innerHTML=`
@@ -192,60 +233,94 @@ if(Date.now() - (localStorage.lastSubmit||0) < 60000){
   </h2>`;
 }
 
-// Fungsi kirim lamaran + simpan ke localStorage agar admin bisa baca
 async function kirim(){
- if(!nama.value||!discordId.value||!umur.value||!exp.value||!foto.files[0]){
-  alert("Lengkapi semua data");
-  return;
- }
+  const fields = [
+    {el: nama, step: 1},
+    {el: discordId, step: 1},
+    {el: umur, step: 2},
+    {el: exp, step: 2},
+    {el: foto, step: 3}
+  ];
 
- submitBtn.disabled=true;
- status.innerText="⏳ Mengirim lamaran...";
+  let incompleteSteps = new Set();
+  fields.forEach(f => f.el.style.borderColor = '#1e293b');
 
- const idDaftar=Date.now();
+  let firstEmptyField = null;
+  fields.forEach(f=>{
+    const empty = (!f.el.value || (f.el.files && f.el.files.length===0));
+    if(empty){
+      incompleteSteps.add(f.step);
+      if(!firstEmptyField) firstEmptyField=f.el;
+    }
+  });
 
- // Simpan ke localStorage agar admin bisa lihat
- let lamaranSTM=JSON.parse(localStorage.getItem("lamaranSTM")||"[]");
- lamaranSTM.push({
-  id:idDaftar,
-  nama:nama.value,
-  umur:umur.value,
-  discord:discordId.value,
-  pengalaman:exp.value,
-  status:"MENUNGGU"
- });
- localStorage.setItem("lamaranSTM",JSON.stringify(lamaranSTM));
+  if(incompleteSteps.size >0){
+    const firstStep=Math.min(...incompleteSteps);
+    nextStep(firstStep);
+    firstEmptyField.scrollIntoView({behavior:'smooth', block:'center'});
+    firstEmptyField.style.borderColor='red';
+    firstEmptyField.animate([{boxShadow:'0 0 0px red'},{boxShadow:'0 0 12px red'},{boxShadow:'0 0 0px red'}], {duration:800});
+    status.style.color='red';
+    status.innerText="⚠ Mohon lengkapi semua data yang berwarna merah!";
+    return;
+  }
 
- // Kirim ke webhook Discord
- const formData=new FormData();
- formData.append("file",foto.files[0],"foto.png");
- formData.append("payload_json",JSON.stringify({
-  content:`<@${discordId.value}>`,
-  embeds:[{
-   title:"📩 LAMARAN MEKANIK BARU",
-   color:5793266,
-   fields:[
-    {name:"ID Pendaftaran",value:String(idDaftar)},
-    {name:"Nama IC",value:nama.value,inline:true},
-    {name:"Umur",value:umur.value,inline:true},
-    {name:"Discord ID",value:discordId.value},
-    {name:"Pengalaman",value:exp.value},
-    {name:"Website",value:`[Buka Website](${WEBSITE_URL})`},
-    {name:"Status",value:"MENUNGGU"}
-   ],
-   image:{url:"attachment://foto.png"},
-   footer:{text:"STM Company Recruitment"},
-   timestamp:new Date()
-  }]
- }));
+  submitBtn.disabled=true;
+  submitBtn.innerText="⏳ Mengirim...";
+  status.style.color='white';
+  status.innerText="⏳ Mengirim lamaran...";
 
- await fetch("https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m",{
-  method:"POST",
-  body:formData
- });
+  const idDaftar=Date.now();
 
- localStorage.lastSubmit=Date.now();
- status.innerHTML=`📬 Lamaran terkirim!<br>ID: <b>${idDaftar}</b>`;
+  // Simpan ke localStorage
+  let lamaranSTM=JSON.parse(localStorage.getItem("lamaranSTM")||"[]");
+  lamaranSTM.push({
+    id:idDaftar,
+    nama:nama.value,
+    umur:umur.value,
+    discord:discordId.value,
+    pengalaman:exp.value,
+    status:"MENUNGGU"
+  });
+  localStorage.setItem("lamaranSTM",JSON.stringify(lamaranSTM));
+
+  // Kirim ke Discord webhook
+  const formData=new FormData();
+  formData.append("file",foto.files[0],"foto.png");
+  formData.append("payload_json",JSON.stringify({
+    content:`<@${discordId.value}>`,
+    embeds:[{
+      title:"📩 LAMARAN MEKANIK BARU",
+      color:5793266,
+      fields:[
+        {name:"ID Pendaftaran",value:String(idDaftar)},
+        {name:"Nama IC",value:nama.value,inline:true},
+        {name:"Umur",value:umur.value,inline:true},
+        {name:"Discord ID",value:discordId.value},
+        {name:"Pengalaman",value:exp.value},
+        {name:"Website",value:`[Buka Website](${WEBSITE_URL})`},
+        {name:"Status",value:"MENUNGGU"}
+      ],
+      image:{url:"attachment://foto.png"},
+      footer:{text:"STM Company Recruitment"},
+      timestamp:new Date()
+    }]
+  }));
+
+  await fetch("https://discord.com/api/webhooks/1435982822266372177/MBWAVYXOoo4niCQPPYiTAbYF8_Pr_U1TqoTrrY229fNUusgna0wYv7MflWVjXLUq3i0m",{
+    method:"POST",
+    body:formData
+  });
+
+  localStorage.lastSubmit=Date.now();
+  submitBtn.innerText="✔ Kirim";
+  status.style.color="green";
+  status.innerHTML=`📬 Lamaran terkirim!<br>ID: <b>${idDaftar}</b>`;
+
+  // Reset form dan kembali step 1
+  form.querySelectorAll('input,textarea').forEach(i=>i.value='');
+  foto.value='';
+  setTimeout(()=>{nextStep(1); submitBtn.disabled=false; submitBtn.innerText="Kirim Lamaran"; status.innerText='';},2000);
 }
 </script>
 
